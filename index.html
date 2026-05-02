@@ -3930,4 +3930,33 @@ function forceDownload(blob, filename) {
 })();
   </script>
 </body>
+  <script>
+(function() {
+    // Override all downloads in WebView
+    document.addEventListener("click", function(e) {
+        const target = e.target;
+
+        // If PDF or image button clicked
+        if (target.innerText && (
+            target.innerText.includes("PDF") ||
+            target.innerText.includes("JPEG") ||
+            target.innerText.includes("Export")
+        )) {
+            setTimeout(() => {
+                try {
+                    // Force open last generated blob/data
+                    const links = document.querySelectorAll("a");
+                    links.forEach(link => {
+                        if (link.href && (link.href.startsWith("blob:") || link.href.startsWith("data:"))) {
+                            window.location.href = link.href;
+                        }
+                    });
+                } catch (err) {
+                    console.log(err);
+                }
+            }, 1000);
+        }
+    });
+})();
+  </script>
 </html>
